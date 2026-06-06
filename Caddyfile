@@ -1,0 +1,14 @@
+# Caddyfile — put alongside docker-compose or /etc/caddy/Caddyfile on the VPS
+# Replace wa.yourdomain.com with your actual subdomain
+
+wa.yourdomain.com {
+  reverse_proxy localhost:8080
+
+  # No CORS — this is server-to-server only
+  header -Server
+
+  log {
+    output file /var/log/caddy/baileys.log
+    format json
+  }
+}

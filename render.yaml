@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: hamduk-baileys
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: starter
+    region: frankfurt  # closest to Lagos on Render
+    healthCheckPath: /health
+    disk:
+      name: baileys-auth
+      mountPath: /data/auth
+      sizeGB: 1
+    envVars:
+      - key: BAILEYS_AUTH_DIR
+        value: /data/auth
+      - key: PORT
+        value: "8080"
+      - key: BAILEYS_BEARER
+        sync: false   # set manually in Render dashboard
+      - key: ADMIN_BEARER
+        sync: false   # set manually in Render dashboard

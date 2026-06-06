@@ -1,0 +1,23 @@
+services:
+  baileys:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8080:8080"  # bind localhost only — Caddy/Nginx terminates TLS
+    volumes:
+      - baileys_auth:/data/auth
+    environment:
+      BAILEYS_AUTH_DIR: /data/auth
+      BAILEYS_BEARER: ${BAILEYS_BEARER}
+      ADMIN_BEARER: ${ADMIN_BEARER}
+      PORT: "8080"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  baileys_auth:
+    driver: local

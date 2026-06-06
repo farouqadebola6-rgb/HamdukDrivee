@@ -1,0 +1,43 @@
+# fly.toml — Hamduk Baileys WhatsApp microservice
+app = "hamduk-baileys"
+primary_region = "jnb"  # Johannesburg — closest to Lagos
+
+[build]
+
+[env]
+  PORT = "8080"
+  BAILEYS_AUTH_DIR = "/data/auth"
+
+[mounts]
+  source = "baileys_auth"
+  destination = "/data/auth"
+
+[[services]]
+  protocol = "tcp"
+  internal_port = 8080
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+    [services.ports.force_https]
+      enabled = true
+
+  [services.concurrency]
+    type = "requests"
+    hard_limit = 50
+    soft_limit = 30
+
+  [[services.http_checks]]
+    interval = "15s"
+    timeout = "5s"
+    grace_period = "10s"
+    method = "get"
+    path = "/health"
+
+[resources]
+  cpus = 1
+  memory_mb = 512
