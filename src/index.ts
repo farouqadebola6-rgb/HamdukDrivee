@@ -98,6 +98,9 @@ async function connect(): Promise<void> {
     auth: state,
     printQRInTerminal: false,
     logger: pino({ level: "silent" }) as any,
+    browser: ["Hamduk Drive", "Chrome", "120.0.0"],
+    connectTimeoutMs: 60_000,
+    retryRequestDelayMs: 2000,
   });
 
   sock.ev.on("creds.update", saveCreds);
