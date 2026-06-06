@@ -1,6 +1,7 @@
 import makeWASocket, {
   useMultiFileAuthState,
   DisconnectReason,
+  fetchLatestBaileysVersion,
   type WASocket,
 } from "@whiskeysockets/baileys";
 import express, { type Request, type Response, type NextFunction } from "express";
@@ -93,8 +94,10 @@ function adminMiddleware(req: Request, res: Response, next: NextFunction): void 
 // ─── WhatsApp socket lifecycle ─────────────────────────────────────────────
 async function connect(): Promise<void> {
   const { state, saveCreds } = await useMultiFileAuthState(AUTH_DIR!);
+  const { version } = await fetchLatestBaileysVersion();
 
   sock = makeWASocket({
+    version,
     auth: state,
     printQRInTerminal: false,
     logger: pino({ level: "silent" }) as any,
